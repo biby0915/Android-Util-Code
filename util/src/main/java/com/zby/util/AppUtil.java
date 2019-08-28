@@ -1,8 +1,10 @@
 package com.zby.util;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -71,5 +73,21 @@ public class AppUtil {
             Log.e("getAppVersionName", e.getMessage());
         }
         return appVersionName;
+    }
+
+    /**
+     * Return the {@link Activity} this context is currently associated with.
+     * May return null if the context associated with is not the view int the activity.
+     */
+    public static Activity getHostActivity(Context context) {
+        if (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            }
+
+            getHostActivity(((ContextWrapper) context).getBaseContext());
+        }
+
+        return null;
     }
 }
