@@ -15,7 +15,7 @@ public class PermissionUtil {
     public static boolean hasAllPermissions(Context context, String... permissions) {
         for (String permission : permissions) {
             int result = ContextCompat.checkSelfPermission(context, permission);
-            Logger.d(TAG,"hasAllPermissions:"+permission+"  "+result);
+//            Logger.D.log(TAG, "hasAllPermissions:" + permission + "  " + result);
             if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
@@ -23,10 +23,10 @@ public class PermissionUtil {
         return true;
     }
 
-    public static boolean hasAnyPermissions(Context context, String... permissions) {
+    public static boolean hasAnyPermission(Context context, String... permissions) {
         for (String permission : permissions) {
             int result = ContextCompat.checkSelfPermission(context, permission);
-            Logger.d(TAG,"hasAnyPermissions:"+permission+"  "+result);
+//            Logger.D.log(TAG, "hasAnyPermission:" + permission + "  " + result);
             if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED) {
                 return true;
             }

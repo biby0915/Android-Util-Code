@@ -1,7 +1,10 @@
 package com.zby.util;
 
+import com.zby.util.constant.TimeConstant;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -10,6 +13,7 @@ import java.util.Locale;
  * @date 2019-08-14
  */
 public class TimeUtil {
+    private static final String TAG = "TimeUtil";
     public static final String YMDHMS = "yyyy-MM-dd HH:mm:ss";
     public static final String YMDHM = "yyyy-MM-dd HH:mm";
     public static final String YMD = "yyyy-MM-dd";
@@ -38,5 +42,24 @@ public class TimeUtil {
 
     public static String formatDate(Date date, String pattern) {
         return getDateFormat(pattern).format(date);
+    }
+
+    public static boolean isToday(String dateString, String pattern) {
+        try {
+            Date date = parseDate(dateString, pattern);
+
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+
+            return date.getTime() >= c.getTime().getTime() && date.getTime() < c.getTime().getTime() + TimeConstant.DAY_IN_MILLI;
+
+        } catch (ParseException e) {
+            Logger.E.log(TAG, e.getMessage() + " ,use pattern: " + pattern);
+        }
+
+        return false;
     }
 }

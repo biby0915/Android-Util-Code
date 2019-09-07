@@ -8,11 +8,16 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+
 /**
  * @author ZhuBingYang
  * @date 2019-08-14
  */
-public class NetUtil {
+public class NetworkUtil {
     /**
      * return whether network is connected
      *
@@ -97,8 +102,10 @@ public class NetUtil {
     }
 
     /**
-     * Get the SSID of the current connection WIFI.
+     * Returns the SSID of the current connection WIFI.
      * The 9.0 model must request the GPS permission and open the GPS to get the WIFI name correctly.
+     * <p>
+     * request permission {@code android.permission.ACCESS_NETWORK_STATE}
      */
     public static String getWifiSSID(Context context) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O || Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
@@ -118,7 +125,7 @@ public class NetUtil {
 
             ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
             if (cm != null) {
-                NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+                @SuppressLint("MissingPermission") NetworkInfo networkInfo = cm.getActiveNetworkInfo();
                 if (networkInfo.isConnected()) {
                     if (networkInfo.getExtraInfo() != null) {
                         return networkInfo.getExtraInfo().replace("\"", "");
@@ -131,7 +138,7 @@ public class NetUtil {
     }
 
     /**
-     * Get the BSSID of the current connection WIFI
+     * Returns the BSSID of the current connection WIFI
      */
     public static String getWifiBSSID(Context context) {
         WifiManager wm = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -139,6 +146,47 @@ public class NetUtil {
             WifiInfo wi = wm.getConnectionInfo();
             return wi.getBSSID();
         }
+        return "";
+    }
+
+    /**
+     * Returns the IP address of the current network connection
+     * if the connection is Wifi,android.permission.ACCESS_WIFI_STATE permission is required
+     * if the connection is mobile,android.permission.INTERNET permission is required
+     *
+     * @return the ip address if successfully acquisition; otherwise, a string
+     * equals to "" is returned
+     */
+    public static String getIpAddress(Context context) {
+        int connectedType = getConnectedType(context);
+        if (connectedType == -1) {
+            return "";
+        }
+
+        if (connectedType == ConnectivityManager.TYPE_WIFI) {
+            //requires android.permission.ACCESS_WIFI_STATE permission
+            WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            return ConvertUtil.int2ip(wifiInfo.getIpAddress());
+        } else if (connectedType == ConnectivityManager.TYPE_MOBILE) {
+            try {
+                //requires android.permission.INTERNET permission
+                if (NetworkInterface.getNetworkInterfaces() != null) {
+                    for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                        NetworkInterface networkInterface = en.nextElement();
+                        for (Enumeration<InetAddress> addresses = networkInterface.getInetAddresses(); addresses.hasMoreElements(); ) {
+                            InetAddress inetAddress = addresses.nextElement();
+                            if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                                return inetAddress.getHostAddress();
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         return "";
     }
 }
