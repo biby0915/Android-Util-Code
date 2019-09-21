@@ -44,7 +44,7 @@ public class AppUtil {
     }
 
     /**
-     * 获取应用程序名称
+     * Returns current application name
      */
     public static synchronized String getAppName(Context context) {
         try {
@@ -60,7 +60,7 @@ public class AppUtil {
     }
 
     /**
-     * 获取当前app version code
+     * Returns current app version code
      */
     public static long getAppVersionCode(Context context) {
         long appVersionCode = 0;
@@ -76,7 +76,7 @@ public class AppUtil {
     }
 
     /**
-     * 获取当前app version name
+     * Returns current app version name
      */
     public static String getAppVersionName(Context context) {
         String appVersionName = "";

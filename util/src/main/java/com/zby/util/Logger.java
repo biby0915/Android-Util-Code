@@ -30,7 +30,7 @@ public class Logger {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({PRIORITY_VERBOSE, PRIORITY_DEBUG, PRIORITY_INFO, PRIORITY_WARN, PRIORITY_ERROR})
-    @interface LogLevel {
+    public @interface LogLevel {
     }
 
     public static D D = new D();
@@ -77,30 +77,51 @@ public class Logger {
         int logLevel = PRIORITY_VERBOSE;
 
         public void log(String tag, String msg) {
+            if (!mEnableLog) {
+                return;
+            }
             logger.log(logLevel, tag, msg);
         }
 
         public void longString(String tag, String msg) {
+            if (!mEnableLog) {
+                return;
+            }
             logger.longString(logLevel, tag, msg);
         }
 
         public void object(String tag, Object o) {
+            if (!mEnableLog) {
+                return;
+            }
             logger.object(logLevel, tag, o);
         }
 
         public void array(String tag, Object... array) {
+            if (!mEnableLog) {
+                return;
+            }
             logger.array(logLevel, tag, array);
         }
 
         public void map(String tag, Map map) {
+            if (!mEnableLog) {
+                return;
+            }
             logger.map(logLevel, tag, map);
         }
 
         public void json(String tag, String json) {
+            if (!mEnableLog) {
+                return;
+            }
             logger.json(logLevel, tag, json);
         }
 
         public void list(String tag, Collection data) {
+            if (!mEnableLog) {
+                return;
+            }
             logger.list(logLevel, tag, data);
         }
     }

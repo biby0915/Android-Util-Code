@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
  */
 public class HardwareUtil {
 
+    /**
+     * Returns the number of cpu processors
+     */
     public static int getCoreNumbers() {
         int coreNumbers = 0;
         try {

@@ -70,7 +70,7 @@ public class FileOperator {
         return null;
     }
 
-    private static File openOrCreateDir(String dirPath) {
+    public static File openOrCreateDir(String dirPath) {
         if (!hasStoragePermission()) {
             logPermissionError();
             return null;
@@ -146,12 +146,13 @@ public class FileOperator {
     }
 
 
-    public void write(String filePath, String text, boolean append) {
+    public static void write(String filePath, String text, boolean append) {
         File file = openFile(filePath);
-        if (fileNotExists(file)) {
+        if (fileNotExists(file) || file.isDirectory()) {
             logFileNotExists();
             return;
         }
+
         if (text == null) {
             Logger.D.log(TAG, "content can not be null.");
             return;

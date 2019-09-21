@@ -44,6 +44,15 @@ public class TimeUtil {
         return getDateFormat(pattern).format(date);
     }
 
+    /**
+     * Returns whether the given date string is corresponds to today.
+     * date equals today and time from 00:00:00 000 to 23:59:59 999.
+     *
+     * @param dateString the date string to determine.
+     * @param pattern    date format to use.
+     * @return returns {@code true} if the date after conversion corresponds to today;
+     * otherwise,{@code false} is returned.
+     */
     public static boolean isToday(String dateString, String pattern) {
         try {
             Date date = parseDate(dateString, pattern);

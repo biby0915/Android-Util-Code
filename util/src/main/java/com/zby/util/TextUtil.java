@@ -2,6 +2,8 @@ package com.zby.util;
 
 import android.text.TextUtils;
 
+import java.util.ArrayList;
+
 /**
  * @author ZhuBingYang
  * @date 2019-08-14
@@ -79,5 +81,20 @@ public class TextUtil {
             levelStr.append("\t");
         }
         return levelStr.toString();
+    }
+
+    public static String getPinYin(String input) {
+        ArrayList<HanziToPinyin.Token> tokens = HanziToPinyin.getInstance().get(input);
+        StringBuilder sb = new StringBuilder();
+        if (tokens != null && tokens.size() > 0) {
+            for (HanziToPinyin.Token token : tokens) {
+                if (HanziToPinyin.Token.PINYIN == token.type) {
+                    sb.append(token.target);
+                } else {
+                    sb.append(token.source);
+                }
+            }
+        }
+        return sb.toString().toLowerCase();
     }
 }
